@@ -496,10 +496,14 @@
 
 
    <!-- início modal cart -->
-<div id="cart-modal" class=" bg-black/60 w-full h-full fixed top-0 left-0 z-[99]  items-center justify-center hidden">
-    <div class="bg-white p-5 rounded-md min-w-[500px]">
+<!-- início modal cart -->
+<!-- início modal cart -->
+<div id="cart-modal" class="bg-black/60 w-full h-full fixed top-0 left-0 z-[99] flex items-center justify-center hidden">
+    <div class="bg-white p-5 rounded-md w-[95%] max-w-[600px] max-h-[90%] overflow-y-auto">
         <h2 class="text-center font-bold text-2xl mb-2">Meu Carrinho</h2>
-        <div id="cart-items" class="flex justify-between mb-2 flex-col"></div>
+        <div id="cart-items" class="flex flex-col gap-2 mb-4">
+            <!-- Produtos serão adicionados aqui dinamicamente -->
+        </div>
         
         <p class="font-bold"> Total: <span id="cart-total">0.00</span></p>
         <p class="font-bold mt-4">Endereço de entrega</p>
@@ -514,6 +518,8 @@
         </div>
     </div>
 </div>
+
+
 <!-- fim modal -->
 
     

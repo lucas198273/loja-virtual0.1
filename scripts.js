@@ -130,19 +130,15 @@ cartItemsContainer.addEventListener("click",function(event){
         removeItemCart(name)
     }
 })
-
 function removeItemCart(name) {
     // Remove o item do carrinho
     const itemIndex = cart.findIndex(item => item.name === name);
 
     if (itemIndex !== -1) {
-
         const item = cart[itemIndex];
-        
 
-        
         // Localiza o botão correspondente ao item
-      
+        const buttons = document.querySelectorAll('[data-name]');
 
         if (item.quantity > 1) {
             item.quantity -= 1;
@@ -151,21 +147,23 @@ function removeItemCart(name) {
         }
 
         // Remove o item do carrinho se a quantidade for 1
-        button.classList.remove("bg-green-500");
-        button.classList.add("bg-gray-900");
         buttons.forEach(button => {
-            
             if (button.getAttribute("data-name") === name) {
-                // Remove a classe verde e adiciona a cinza
-                
-                cart.splice(itemIndex, 1);
+                // Atualiza imediatamente a classe do botão
+                button.classList.remove("bg-green-500");
+                button.classList.add("bg-gray-900");
             }
         });
+
+        // Atualiza o array do carrinho e o modal
+        cart.splice(itemIndex, 1);
         updateModal();
     }
 
+    // Atualiza o contador do carrinho imediatamente
     cartCount.innerHTML = cart.length;
 }
+
 
 
 checkoutBtn.addEventListener("click", function() {
