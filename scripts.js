@@ -137,9 +137,6 @@ function removeItemCart(name) {
     if (itemIndex !== -1) {
         const item = cart[itemIndex];
 
-        // Localiza o botão correspondente ao item
-        const buttons = document.querySelectorAll('[data-name]');
-
         if (item.quantity > 1) {
             item.quantity -= 1;
             updateModal();
@@ -147,22 +144,26 @@ function removeItemCart(name) {
         }
 
         // Remove o item do carrinho se a quantidade for 1
+        const buttons = document.querySelectorAll('[data-name]');
         buttons.forEach(button => {
             if (button.getAttribute("data-name") === name) {
                 // Atualiza imediatamente a classe do botão
                 button.classList.remove("bg-green-500");
-                button.classList.add("bg-gray-900");
+                requestAnimationFrame(() => {
+                    button.classList.add("bg-gray-900");
+                });
             }
         });
 
-        // Atualiza o array do carrinho e o modal
+        // Atualiza o array do carrinho
         cart.splice(itemIndex, 1);
         updateModal();
     }
 
-    // Atualiza o contador do carrinho imediatamente
+    // Atualiza o contador do carrinho
     cartCount.innerHTML = cart.length;
 }
+
 
 
 
