@@ -151,12 +151,13 @@ function removeItemCart(name) {
         }
 
         // Remove o item do carrinho se a quantidade for 1
-        
+        button.classList.remove("bg-green-500");
+        button.classList.add("bg-gray-900");
         buttons.forEach(button => {
+            
             if (button.getAttribute("data-name") === name) {
                 // Remove a classe verde e adiciona a cinza
-                button.classList.remove("bg-green-500");
-                button.classList.add("bg-gray-900");
+                
                 cart.splice(itemIndex, 1);
             }
         });
