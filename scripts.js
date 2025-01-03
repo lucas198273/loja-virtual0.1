@@ -11,10 +11,12 @@ const cartCount = document.getElementById("cart-count")
 const dateSpan  = document.getElementById("date-span")
 const buttons = document.querySelectorAll(".add-to-cart-btn");
 let cart = [];
+let itemQuanty = 0;
 console.log(cartCount)
-menu.addEventListener("click", function(event) {
-    console.log(event.target);
-});
+
+// menu.addEventListener("click", function(event) {
+//     console.log(event.target);
+// });
 
 cartBtn.addEventListener("click", function() {
     cartModal.style.display = "flex";
@@ -29,19 +31,18 @@ cartModal.addEventListener("click", function(event) {
 closeModal.addEventListener("click", function() {
     cartModal.style.display = "none";
 });
-function removegreenaddgray(parentButton){
-
-    
-    parentButton.classList.remove("bg-green-500");
-    parentButton.classList.add("bg-gray-900");
-}
 
 
-
+let isProcessingClick = false;
 menu.addEventListener("click", function (event) {
+    if (isProcessingClick) return;
+    isProcessingClick = true;
+    setTimeout(() => isProcessingClick = false, 300); // Limita a 1 clique a cada 300ms
+
     const parentButton = event.target.closest(".add-to-cart-btn");
     if (parentButton) {
-        // Remove a classe cinza e adiciona a verde
+            // Sua lógica
+               // Remove a classe cinza e adiciona a verde
         parentButton.classList.remove("bg-gray-900");
         parentButton.classList.add("bg-green-500");
 
@@ -61,6 +62,8 @@ menu.addEventListener("click", function (event) {
 
 
 
+
+
 function addToCart(name, price) {
     // Verifica se o item já existe no carrinho
     const existingItem = cart.find(item => item.name === name);
@@ -68,6 +71,7 @@ function addToCart(name, price) {
     if (existingItem) {
         // Incrementa a quantidade do item existente
         existingItem.quantity += 1;
+        itemQuanty += 1;
     } else {
         // Adiciona um novo item ao carrinho
         cart.push({
@@ -75,9 +79,10 @@ function addToCart(name, price) {
             price,
             quantity: 1,
         });
+        itemQuanty += 1;
     }
    
-    cartCount.innerHTML = cart.length;
+    cartCount.innerHTML = itemQuanty;
     
     // Atualiza o modal após a adição
     updateModal();
@@ -144,21 +149,23 @@ function removeItemCart(name) {
 
         if (item.quantity > 1) {
             item.quantity -= 1;
+            itemQuanty -=1;
+            cartCount.innerHTML = itemQuanty;
             updateModal();
+
             return;
         }
 
         // Remove o item do carrinho se a quantidade for 1
-        const buttons = document.querySelectorAll('[data-name]');
-        buttons.forEach(button => {
-            if (button.getAttribute("data-name") === name) {
-                // Atualiza imediatamente a classe do botão
-                button.classList.remove("bg-green-500");
-                requestAnimationFrame(() => {
-                    button.classList.add("bg-gray-900");
-                });
-            }
-        });
+        const button = document.querySelector(`[data-name="${name}"]`);
+      
+        itemQuanty -=1;
+        if (button) {
+            button.classList.remove("bg-green-500");
+            button.classList.add("bg-gray-900");
+        }
+        
+        
 
         // Atualiza o array do carrinho
         cart.splice(itemIndex, 1);
@@ -166,7 +173,7 @@ function removeItemCart(name) {
     }
 
     // Atualiza o contador do carrinho
-    cartCount.innerHTML = cart.length;
+    cartCount.innerHTML = itemQuanty;
 }
 
 
