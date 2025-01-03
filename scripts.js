@@ -38,22 +38,27 @@ function removegreenaddgray(parentButton){
 
 
 
-menu.addEventListener("click", function(event) {
-    let parentButton = event.target.closest(".add-to-cart-btn");
+menu.addEventListener("click", function (event) {
+    const parentButton = event.target.closest(".add-to-cart-btn");
     if (parentButton) {
+        // Remove a classe cinza e adiciona a verde
         parentButton.classList.remove("bg-gray-900");
         parentButton.classList.add("bg-green-500");
-    
+
+        // Força o navegador a processar a alteração
+        setTimeout(() => {
+            parentButton.style.backgroundColor = ""; // Apenas para garantir a renderização
+        }, 0);
+
+        // Recupera as informações do produto
         const name = parentButton.getAttribute("data-name");
         const price = parseFloat(parentButton.getAttribute("data-price"));
-     
-        addToCart(name, price); // Adiciona ao carrinho
-        // Atualizar o total do carrinho
-       
-        // Muda a cor do botão para verde
- 
+
+        // Adiciona ao carrinho
+        addToCart(name, price);
     }
 });
+
 
 
 function addToCart(name, price) {
