@@ -35,21 +35,21 @@ function removegreenaddgray(parentButton){
     parentButton.classList.remove("bg-green-500");
     parentButton.classList.add("bg-gray-900");
 }
-function removegrayaddgreen(parentButton){
-    parentButton.classList.remove("bg-gray-900");
-    parentButton.classList.add("bg-green-500");
-}
+
 
 
 menu.addEventListener("click", function(event) {
     let parentButton = event.target.closest(".add-to-cart-btn");
     if (parentButton) {
+        parentButton.classList.remove("bg-gray-900");
+        parentButton.classList.add("bg-green-500");
+    
         const name = parentButton.getAttribute("data-name");
         const price = parseFloat(parentButton.getAttribute("data-price"));
      
         addToCart(name, price); // Adiciona ao carrinho
         // Atualizar o total do carrinho
-        removegrayaddgreen(parentButton);
+       
         // Muda a cor do botão para verde
  
     }
