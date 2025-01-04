@@ -2073,6 +2073,16 @@ video {
   background-color: rgb(24 24 27 / var(--tw-bg-opacity, 1));
 }
 
+.bg-slate-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity, 1));
+}
+
+.bg-slate-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
+}
+
 .bg-opacity-90 {
   --tw-bg-opacity: 0.9;
 }
@@ -2886,7 +2896,7 @@ video {
 }
 
 body{
-  background-color: rgb(253, 246, 246);
+  background-color: rgb(255, 255, 255);
 }
 
 @media (min-width: 640px) {
