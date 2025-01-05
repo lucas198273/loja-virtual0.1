@@ -14,9 +14,89 @@ let cart = [];
 let itemQuanty = 0;
 console.log(cartCount)
 
+
+
+
 // menu.addEventListener("click", function(event) {
 //     console.log(event.target);
 // });
+
+
+
+const addressInputNome = document.getElementById("nome-completo");
+const addressInputRuaNumero = document.getElementById("rua-numero");
+const addressInputBairro = document.getElementById("Bairro");
+
+
+checkoutBtn.addEventListener("click", function() {
+    if (!checkRestauranteOpen()) {
+        showClosedToast();
+        return;
+    }
+
+    if (!validateAddress()) {
+        return;
+    }
+
+    const msg = createWhatsAppMessage();
+    const phone = "31992311011";
+    
+    // Redireciona para o WhatsApp
+    window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+    resetCart();
+});
+
+function validateAddress() {
+    let valid = true;
+
+    if (addressInputNome.value.trim() === "") {
+        valid = false;
+    }
+    
+    if (addressInputRuaNumero.value.trim() === "") {
+        valid = false;
+    }
+
+    if (addressInputBairro.value.trim() === "") {
+        valid = false;
+    }
+
+    if (!valid) {
+        addressWarn.classList.remove("hidden");
+        addressInputNome.classList.add("border-red-500");
+        addressInputRuaNumero.classList.add("border-red-500");
+        addressInputBairro.classList.add("border-red-500");
+        return false;
+    } else {
+        addressWarn.classList.add("hidden");
+        addressInputNome.classList.remove("border-red-500");
+        addressInputRuaNumero.classList.remove("border-red-500");
+        addressInputBairro.classList.remove("border-red-500");
+        return true;
+    }
+}
+
+function createWhatsAppMessage() {
+    const cartItems = cart.map(item => 
+        `${item.name} - Quantidade: ${item.quantity} - Preço: R$${(item.price * item.quantity).toFixed(2)}`
+    ).join("\n");
+
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+    
+    return encodeURIComponent(
+        `Olá, gostaria de fazer um pedido:\n
+${cartItems}\n
+Total: R$${total}\n
+Endereço: ${addressInputNome.value}, ${addressInputRuaNumero.value}, ${addressInputBairro.value}`
+    );
+}
+
+function resetCart() {
+    cart = [];
+    updateCartTotal();
+    updateModal();
+}
+
 
 cartBtn.addEventListener("click", function() {
     cartModal.style.display = "flex";
@@ -142,114 +222,51 @@ cartItemsContainer.addEventListener("click",function(event){
         removeItemCart(name)
     }
 })
+
+
 function removeItemCart(name) {
-    // Remove o item do carrinho
+    // Encontra o índice do item no carrinho
     const itemIndex = cart.findIndex(item => item.name === name);
 
-    if (itemIndex !== -1) {
-        const item = cart[itemIndex];
+    // Se o item não estiver no carrinho, não faz nada
+    if (itemIndex === -1) {
+        return;
+    }
 
-        if (item.quantity > 1) {
-            item.quantity -= 1;
-            itemQuanty -=1;
-            cartCount.innerHTML = itemQuanty;
-            updateModal();
+    const item = cart[itemIndex];
+    const button = document.querySelector(`[data-name="${name}"]`);
 
-            return;
-        }
+    // Se a quantidade for maior que 1, diminui a quantidade
+    if (item.quantity > 1) {
+        item.quantity -= 1;
+    } else {
+        // Se a quantidade for 1, remove o item do carrinho
+        cart.splice(itemIndex, 1);
+        updateButtonState(button, false);
+    }
 
-        // Remove o item do carrinho se a quantidade for 1
-        const button = document.querySelector(`[data-name="${name}"]`);
-      
-        itemQuanty -=1;
-        if (button) {
+    // Atualiza a quantidade total e o contador do carrinho
+    itemQuanty -= 1;
+    cartCount.innerHTML = itemQuanty;
+    updateModal();
+}
+
+// Atualiza o estado do botão baseado na presença do item no carrinho
+function updateButtonState(button, isInCart) {
+    if (button) {
+        if (isInCart) {
+            button.classList.remove("bg-gray-900");
+            button.classList.add("bg-green-500");
+        } else {
             button.classList.remove("bg-green-500");
             button.classList.add("bg-gray-900");
         }
-        
-        
-
-        // Atualiza o array do carrinho
-        cart.splice(itemIndex, 1);
-        updateModal();
     }
-
-    // Atualiza o contador do carrinho
-    cartCount.innerHTML = itemQuanty;
 }
 
 
 
 
-checkoutBtn.addEventListener("click", function() {
-
-    const isOpen = checkRestauranteOpen();
-    if(!isOpen){
-        Toastify({
-            text: "⚠️ Ops, estamos fechados no momento!",
-            duration: 4000, // Um pouco mais de tempo para leitura
-            close: true, // Botão de fechamento
-            gravity: "top", // `top` ou `bottom`
-            position: "right", // `left`, `center` ou `right`
-            stopOnFocus: true, // Evita fechar ao passar o mouse
-            style: {
-                background: "linear-gradient(to right, #ff416c, #ff4b2b)", // Gradiente com cores quentes
-                color: "#fff", // Texto em branco para contraste
-                fontSize: "16px", // Tamanho da fonte
-                fontWeight: "bold", // Deixa o texto mais destacado
-                borderRadius: "8px", // Bordas arredondadas
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Adiciona sombra para profundidade
-                padding: "10px 20px", // Aumenta o espaço interno
-            },
-            offset: {
-                x: 10, // Distância da borda lateral
-                y: 50, // Distância do topo
-            },
-            onClick: function () {
-                console.log("Toast clicado!"); // Callback após clique
-            },
-        }).showToast();
-        
-   
-        return;
-    }
-    
-    // Verifica se o campo de endereço está vazio
-    if (addressInput.value === "") {
-        addressWarn.classList.remove("hidden"); // Exibe o aviso
-        addressInput.classList.add("border-red-500"); // Exibe o aviso
-        return;
-    } else {
-        addressWarn.classList.add("hidden"); // Oculta o aviso se o campo estiver preenchido
-        addressInput.classList.remove("border-red-500")
-        // Lógica para proceder com o checkout, por exemplo
-    }
-
-    // evnviar pedido para whats
-    const cartItems = cart.map(item => 
-        `${item.name} - Quantidade: ${item.quantity} - Preço: R$${(item.price * item.quantity).toFixed(2)}`
-    ).join("\n");
-    
-    const total = cart
-    .reduce((sum, item) => sum + item.price * item.quantity, 0)
-    .toFixed(2);
-    
-    // Adiciona uma mensagem de cabeçalho e total do pedido
-    const msg = encodeURIComponent(
-        `Olá, gostaria de fazer um pedido:\n\n${cartItems}\n\nTotal: R$${total}`
-    );
-    
-    // Número de telefone do WhatsApp
-    const phone = "31992311011";
-
-
-    // Redireciona para o WhatsApp
-    window.open(    `https://wa.me/${phone}?text=${msg} Endereço ${addressInput.value}`
-        , "_blank");
-    cart = [];
-    updateCartTotal();
-    updateModal();
-});
 
 // Opcional: Se você quiser esconder o aviso ao digitar no campo de endereço
 addressInput.addEventListener("input", function() {
@@ -260,7 +277,7 @@ addressInput.addEventListener("input", function() {
 function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 17 && hora < 24;
+    return hora >= 18 && hora < 24;
 }
 
 const spanItem = document.getElementById("date-span");
