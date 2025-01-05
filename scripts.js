@@ -114,9 +114,11 @@ function updateModal(){
                 <p>Quantidade: ${item.quantity}</p>
                 <p>R$ ${item.price.toFixed(2)}</p>            </div>
             <div>
-                <button class="remove-from-cart" data-name="${item.name}">
-                   Remover
-                </button>
+           <button class="remove-from-cart bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out" data-name="${item.name}">
+    Remover
+</button>
+
+
             </div>
         </div>
         `
