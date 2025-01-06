@@ -61,6 +61,34 @@ checkoutBtn.addEventListener("click", function() {
    
         return;
     }
+    if(cart.length === 0){
+        
+        Toastify({
+            text: "⚠️ Ops, seu carrinho esta vazio!",
+            duration: 4000, // Um pouco mais de tempo para leitura
+            close: true, // Botão de fechamento
+            gravity: "top", // `top` ou `bottom`
+            position: "right", // `left`, `center` ou `right`
+            stopOnFocus: true, // Evita fechar ao passar o mouse
+            style: {
+                background: "linear-gradient(to right, #ff416c, #ff4b2b)", // Gradiente com cores quentes
+                color: "#fff", // Texto em branco para contraste
+                fontSize: "16px", // Tamanho da fonte
+                fontWeight: "bold", // Deixa o texto mais destacado
+                borderRadius: "8px", // Bordas arredondadas
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Adiciona sombra para profundidade
+                padding: "10px 20px", // Aumenta o espaço interno
+            },
+            offset: {
+                x: 0, // Distância da borda lateral
+                y: 50, // Distância do topo
+            },
+            onClick: function () {
+                console.log("Toast clicado!"); // Callback após clique
+            },
+        }).showToast();
+        return;
+    }
 
     if (!validateAddress()) {
         return;
@@ -68,8 +96,7 @@ checkoutBtn.addEventListener("click", function() {
 
     const msg = createWhatsAppMessage();
     const phone = "31992311011";
-    itemQuanty = 0;
-    cartCount.innerHTML = itemQuanty;
+    
     
     // Redireciona para o WhatsApp
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
@@ -139,7 +166,9 @@ Endereço:  ${addressInputRuaNumero.value}, ${addressInputBairro.value}`
 }
 
 function resetCart() {
+    itemQuanty = 0;
     cart = [];
+    cartCount.innerHTML = itemQuanty;
     updateCartTotal();
     updateModal();
 }
