@@ -280,7 +280,7 @@ function removeItemCart(name) {
 
     const item = cart[itemIndex];
     const button = document.querySelector(`[data-name="${name}"]`);
-
+    itemQuanty -= 1;
     // Se a quantidade for maior que 1, diminui a quantidade
     if (item.quantity > 1) {
         item.quantity -= 1;
@@ -291,7 +291,7 @@ function removeItemCart(name) {
     }
 
     // Atualiza a quantidade total e o contador do carrinho
-    itemQuanty -= 1;
+    
     cartCount.innerHTML = itemQuanty;
     updateModal();
 }
