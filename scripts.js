@@ -68,6 +68,8 @@ checkoutBtn.addEventListener("click", function() {
 
     const msg = createWhatsAppMessage();
     const phone = "31992311011";
+    itemQuanty = 0;
+    cartCount.innerHTML = itemQuanty;
     
     // Redireciona para o WhatsApp
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
