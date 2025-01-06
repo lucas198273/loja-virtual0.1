@@ -29,6 +29,8 @@ const addressInputBairro = document.getElementById("Bairro");
 
 
 checkoutBtn.addEventListener("click", function() {
+
+
     const isOpen = checkRestauranteOpen();
     if(!isOpen){
         Toastify({
@@ -59,6 +61,7 @@ checkoutBtn.addEventListener("click", function() {
    
         return;
     }
+
     if (!validateAddress()) {
         return;
     }
@@ -70,6 +73,20 @@ checkoutBtn.addEventListener("click", function() {
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
     resetCart();
 });
+function showClosedToast() {
+    // Crie um elemento de toast (notificação) simples
+    const toast = document.createElement("div");
+    toast.className = "toast"; // Você pode adicionar estilos a essa classe no CSS
+    toast.textContent = "O restaurante está fechado. Tente novamente mais tarde.";
+
+    // Adicione o toast ao corpo do documento
+    document.body.appendChild(toast);
+
+    // Remova o toast após alguns segundos
+    setTimeout(() => {
+        toast.remove();
+    }, 3000); // 3000 milissegundos = 3 segundos
+}
 
 function validateAddress() {
     let valid = true;
@@ -114,6 +131,8 @@ ${cartItems}\n
 Total: R$${total}\n
 Nome do cliente: ${addressInputNome.value},\n
 Endereço:  ${addressInputRuaNumero.value}, ${addressInputBairro.value}`
+
+
     );
 }
 
@@ -298,7 +317,10 @@ function updateButtonState(button, isInCart) {
 function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 1 && hora < 24;
+    return hora >= 18 && hora < 24;
+
+
+
 }
 
 const spanItem = document.getElementById("date-span");
