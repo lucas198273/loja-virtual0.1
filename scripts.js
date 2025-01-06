@@ -29,11 +29,36 @@ const addressInputBairro = document.getElementById("Bairro");
 
 
 checkoutBtn.addEventListener("click", function() {
-    if (!checkRestauranteOpen()) {
-        showClosedToast();
+    const isOpen = checkRestauranteOpen();
+    if(!isOpen){
+        Toastify({
+            text: "⚠️ Ops, estamos fechados no momento!",
+            duration: 4000, // Um pouco mais de tempo para leitura
+            close: true, // Botão de fechamento
+            gravity: "top", // `top` ou `bottom`
+            position: "right", // `left`, `center` ou `right`
+            stopOnFocus: true, // Evita fechar ao passar o mouse
+            style: {
+                background: "linear-gradient(to right, #ff416c, #ff4b2b)", // Gradiente com cores quentes
+                color: "#fff", // Texto em branco para contraste
+                fontSize: "16px", // Tamanho da fonte
+                fontWeight: "bold", // Deixa o texto mais destacado
+                borderRadius: "8px", // Bordas arredondadas
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Adiciona sombra para profundidade
+                padding: "10px 20px", // Aumenta o espaço interno
+            },
+            offset: {
+                x: 10, // Distância da borda lateral
+                y: 50, // Distância do topo
+            },
+            onClick: function () {
+                console.log("Toast clicado!"); // Callback após clique
+            },
+        }).showToast();
+        
+   
         return;
     }
-
     if (!validateAddress()) {
         return;
     }
@@ -87,7 +112,8 @@ function createWhatsAppMessage() {
         `Olá, gostaria de fazer um pedido:\n
 ${cartItems}\n
 Total: R$${total}\n
-Endereço: ${addressInputNome.value}, ${addressInputRuaNumero.value}, ${addressInputBairro.value}`
+Nome do cliente: ${addressInputNome.value},\n
+Endereço:  ${addressInputRuaNumero.value}, ${addressInputBairro.value}`
     );
 }
 
@@ -268,16 +294,11 @@ function updateButtonState(button, isInCart) {
 
 
 
-// Opcional: Se você quiser esconder o aviso ao digitar no campo de endereço
-addressInput.addEventListener("input", function() {
-    if (addressInput.value !== "") {
-        addressWarn.classList.add("hidden"); // Oculta o aviso enquanto o usuário digita
-    }
-});
+
 function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 18 && hora < 24;
+    return hora >= 1 && hora < 24;
 }
 
 const spanItem = document.getElementById("date-span");

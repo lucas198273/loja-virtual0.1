@@ -817,6 +817,14 @@ video {
   margin-top: 2.25rem;
 }
 
+.mt-80 {
+  margin-top: 20rem;
+}
+
+.mt-64 {
+  margin-top: 16rem;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -3015,6 +3023,14 @@ body{
 }
 
 @media (min-width: 768px) {
+  .md\:mt-4 {
+    margin-top: 1rem;
+  }
+
+  .md\:mt-1 {
+    margin-top: 0.25rem;
+  }
+
   .md\:h-\[500px\] {
     height: 500px;
   }
