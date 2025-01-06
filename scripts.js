@@ -93,12 +93,14 @@ checkoutBtn.addEventListener("click", function() {
     if (!validateAddress()) {
         return;
     }
-
+    itemQuanty = 0;
+   
     const msg = createWhatsAppMessage();
     const phone = "31992311011";
     
     
     // Redireciona para o WhatsApp
+    cartCount.innerHTML = itemQuanty;
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
     resetCart();
 });
@@ -166,9 +168,9 @@ Endereço:  ${addressInputRuaNumero.value}, ${addressInputBairro.value}`
 }
 
 function resetCart() {
-    itemQuanty = 0;
+
     cart = [];
-    cartCount.innerHTML = itemQuanty;
+ 
     updateCartTotal();
     updateModal();
 }
