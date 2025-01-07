@@ -96,7 +96,7 @@ checkoutBtn.addEventListener("click", function() {
     itemQuanty = 0;
    
     const msg = createWhatsAppMessage();
-    const phone = "31992311011";
+    const phone = "31999918730";
     
     
     // Redireciona para o WhatsApp
