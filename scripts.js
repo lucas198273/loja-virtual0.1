@@ -373,7 +373,7 @@ function updateButtonState(button, isInCart) {
 function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 14 && hora < 24;
+    return hora >= 20 && hora < 24;
 
 
 
@@ -381,11 +381,13 @@ function checkRestauranteOpen(){
 
 const spanItem = document.getElementById("date-span");
 const isOpen = checkRestauranteOpen();
-
+const statusText = document.getElementById('status-text');
 if (isOpen) {
     spanItem.classList.remove("bg-red-500");
     spanItem.classList.add("bg-green-600"); // Corrigido "bg-freen-600" para "bg-green-600"
+    statusText.textContent = "Estamos funcionando"; 
 } else {
     spanItem.classList.remove("bg-green-600");
     spanItem.classList.add("bg-red-500");
+    statusText.textContent = "Estamos fechados"; 
 }
