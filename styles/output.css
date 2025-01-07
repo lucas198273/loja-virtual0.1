@@ -3100,6 +3100,15 @@ body{
     width: 100%;
   }
 
+  .sm\:text-\[1\.5rem\] {
+    font-size: 1.5rem;
+  }
+
+  .sm\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
   .sm\:underline {
     text-decoration-line: underline;
   }
@@ -3186,5 +3195,12 @@ body{
     .dark\:lg\:hover\:\[paint-order\:markers\]:hover {
       paint-order: markers;
     }
+  }
+}
+
+@media(max-width:400px) {
+  .\[\@media\(max-width\:400px\)\]\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 }
