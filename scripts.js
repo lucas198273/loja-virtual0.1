@@ -26,6 +26,8 @@ console.log(cartCount)
 const addressInputNome = document.getElementById("nome-completo");
 const addressInputRuaNumero = document.getElementById("rua-numero");
 const addressInputBairro = document.getElementById("Bairro");
+const addressInputReferencia = document.getElementById("Referencia");
+
 
 
 checkoutBtn.addEventListener("click", function() {
@@ -99,7 +101,14 @@ checkoutBtn.addEventListener("click", function() {
     const phone = "31999918730";
     
     
-    // Redireciona para o WhatsApp
+    // Redireciona para o 
+    cart.forEach(item => {
+        const button = document.querySelector(`[data-name="${item.name}"]`);
+        if (button) {
+            button.classList.remove("bg-green-500");
+            button.classList.add("bg-gray-900");
+        }
+    });
     cartCount.innerHTML = itemQuanty;
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
     resetCart();
@@ -161,7 +170,10 @@ function createWhatsAppMessage() {
 ${cartItems}\n
 Total: R$${total}\n
 Nome do cliente: ${addressInputNome.value},\n
-Endereço:  ${addressInputRuaNumero.value}, ${addressInputBairro.value}`
+Endereço:  ${addressInputRuaNumero.value}, ${addressInputBairro.value},\n
+Referencia:${addressInputReferencia.value}
+`
+
 
 
     );
