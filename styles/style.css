@@ -1,6 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@keyframes colorOscillation {
+    0% { background-color: #ffffff; }  
+    25% { background-color: #f7f9fc; }  
+    50% { background-color: #f0f4f8; }  
+    75% { background-color: #ffffff; } 
+    100% { background-color: #f7f9fc; } 
+
+}
+
+.animated-background {
+    animation: colorOscillation 5s infinite;
+}
 
 body{
     background-color: rgb(255, 255, 255);

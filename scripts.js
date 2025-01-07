@@ -23,12 +23,22 @@ console.log(cartCount)
 
 
 
+const closeModalhorarios = document.getElementById("close-modal-horarios");
 const addressInputNome = document.getElementById("nome-completo");
 const addressInputRuaNumero = document.getElementById("rua-numero");
 const addressInputBairro = document.getElementById("Bairro");
 const addressInputReferencia = document.getElementById("Referencia");
 
+function openModal() {
+    const modal = document.getElementById('modal-horarios');
+    modal.style.display = 'flex';
+}
 
+closeModalhorarios.addEventListener("click", function(){
+    const modal = document.getElementById('modal-horarios');
+    modal.style.display = 'none';
+});
+    
 
 checkoutBtn.addEventListener("click", function() {
 
@@ -99,7 +109,8 @@ checkoutBtn.addEventListener("click", function() {
    
     const msg = createWhatsAppMessage();
     const phone = "31999918730";
-    
+ 
+          
     
     // Redireciona para o 
     cart.forEach(item => {
