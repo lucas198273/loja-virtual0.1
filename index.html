@@ -909,7 +909,7 @@
             </div>
             
         </div>
-    </div>
+    
     </main>
 </div>
 <!-- Fim Menu -->
@@ -923,10 +923,30 @@
             <!-- Produtos serão adicionados aqui dinamicamente -->
         </div>
         
-        <p class="font-bold">Total: <span id="cart-total">0.00</span></p>
+        <div class="flex-row justify-between items-center">
+            <p class="font-bold">Total: <span id="cart-total">0.00</span></p>
+          
+            <div class="flex-col items-center justify-end">
+                <h3>Escolha o Tipo de Serviço:</h3>
+                <button id="mesa-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                    Atendimento em Mesa</button>
+                <button id="entrega-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">Entrega</button>
+              </div>
+        </div>
         
+        <div id="mesa-form" class="hidden flex-col mt-4">
+            <label for="mesa-number" class="mb-2">Número da Mesa:</label>
+            <div id="mesa-buttons" class="grid grid-cols-5 gap-2">
+                <!-- Os botões serão gerados dinamicamente -->
+            </div>
+            <input type="hidden" id="mesa-number" name="mesa-number">
+            <p id="selected-mesa" class="text-green-600 font-semibold mt-2 hidden">Mesa selecionada: <span></span></p>
+        </div>
+        
+
         <p class="font-bold mt-4">Endereço de entrega</p>
-        <div>
+        <div id="entrega-form" class="hidden flex-col mt-4">
+
             <input type="text" placeholder="Nome Completo" id="nome-completo" class="w-full border-2 p-1 rounded my-1">
             <input type="text" placeholder="Rua, Número" id="rua-numero" class="w-full border-2 p-1 rounded my-1">
             <input type="text" placeholder="Bairro" id="Bairro" class="w-full border-2 p-1 rounded my-1">
@@ -1002,24 +1022,31 @@
 <!--  -->
 
 
-<!-- fim modal -->
 
-    
-
-    <!-- inicio footer -->
-     <footer class="w-full  bg-red-500 py-3 fixed bottom-0 z-40 flex items-center justify-center ">
-        <button
-        class="flex items-center gap-2 text-white font-bold"
-        id="cart-btn">
-            (<span id="cart-count">0</span>)
-            Ver meu Carrinho
-            <i class="fa fa-cart-plus text-lg text-white"></i>
-        </button>
-     </footer>
-     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-     <script src="/scripts.js"></script>
-   
+<div class="w-full h-[300px] overflow-hidden">
+    <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3750.2728448345633!2d-44.202619626438356!3d-19.955024639085046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa6c360cdf023e5%3A0x2da717cfad8f5512!2sTHE%20BROTHERS%20BURGUERS!5e0!3m2!1spt-BR!2sbr!4v1736516683274!5m2!1spt-BR!2sbr" 
+        class="w-full h-full border-0" 
+        allowfullscreen 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
 </div>
+   
+<!-- fim modal -->
+ <!-- inicio footer -->
+ <footer class="w-full  bg-red-500 py-3 fixed bottom-0 z-40 flex items-center justify-center ">
+    <button
+    class="flex items-center gap-2 text-white font-bold"
+    id="cart-btn">
+        (<span id="cart-count">0</span>)
+        Ver meu Carrinho
+        <i class="fa fa-cart-plus text-lg text-white"></i>
+    </button>
+ </footer>
+ <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+ <script src="/scripts.js"></script>
+
 
 </body>
 </html>

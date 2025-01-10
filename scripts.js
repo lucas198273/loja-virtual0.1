@@ -12,8 +12,35 @@ const dateSpan  = document.getElementById("date-span")
 const buttons = document.querySelectorAll(".add-to-cart-btn");
 let cart = [];
 let itemQuanty = 0;
-console.log(cartCount)
+let pedidoTipo = null; // 'mesa' ou 'entrega'
+let mesaNumero = null; // Número da mesa, caso o tipo de pedido seja 'mesa'
 
+
+const mesaBtn = document.getElementById("mesa-btn");
+const entregaBtn = document.getElementById("entrega-btn");
+const mesaForm = document.getElementById("mesa-form");
+const entregaForm = document.getElementById("entrega-form");
+const mesaButtonsContainer = document.getElementById("mesa-buttons");
+
+mesaButtonsContainer.addEventListener("click", (event) => {
+    if (event.target.dataset.mesa) {
+        mesaNumero = event.target.dataset.mesa; // Atualiza o número da mesa selecionada
+        document.getElementById("selected-mesa").querySelector("span").textContent = mesaNumero; // Atualiza o display
+        document.getElementById("selected-mesa").classList.remove("hidden"); // Mostra a mesa selecionada
+    }
+});
+
+mesaBtn.addEventListener("click", () => {
+    pedidoTipo = 'mesa';
+    mesaForm.classList.remove("hidden");
+    entregaForm.classList.add("hidden");
+});
+
+entregaBtn.addEventListener("click", () => {
+    pedidoTipo = 'entrega';
+    entregaForm.classList.remove("hidden");
+    mesaForm.classList.add("hidden");
+});
 
 
 
@@ -39,80 +66,56 @@ closeModalhorarios.addEventListener("click", function(){
     modal.style.display = 'none';
 });
     
-
+function showToast(message) {
+    Toastify({
+        text: message,
+        duration: 4000, // Um pouco mais de tempo para leitura
+        close: true, // Botão de fechamento
+        gravity: "top", // `top` ou `bottom`
+        position: "right", // `left`, `center` ou `right`
+        stopOnFocus: true, // Evita fechar ao passar o mouse
+        style: {
+            background: "linear-gradient(to right, #ff416c, #ff4b2b)", // Gradiente com cores quentes
+            color: "#fff", // Texto em branco para contraste
+            fontSize: "16px", // Tamanho da fonte
+            fontWeight: "bold", // Deixa o texto mais destacado
+            borderRadius: "8px", // Bordas arredondadas
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Adiciona sombra para profundidade
+            padding: "10px 20px", // Aumenta o espaço interno
+        },
+        offset: {
+            x: 10, // Distância da borda lateral
+            y: 50, // Distância do topo
+        },
+        onClick: function () {
+            console.log("Toast clicado!"); // Callback após clique
+        },
+    }).showToast();
+}
 checkoutBtn.addEventListener("click", function() {
-
-
     const isOpen = checkRestauranteOpen();
-    if(!isOpen){
-        Toastify({
-            text: "⚠️ Ops, estamos fechados no momento!",
-            duration: 4000, // Um pouco mais de tempo para leitura
-            close: true, // Botão de fechamento
-            gravity: "top", // `top` ou `bottom`
-            position: "right", // `left`, `center` ou `right`
-            stopOnFocus: true, // Evita fechar ao passar o mouse
-            style: {
-                background: "linear-gradient(to right, #ff416c, #ff4b2b)", // Gradiente com cores quentes
-                color: "#fff", // Texto em branco para contraste
-                fontSize: "16px", // Tamanho da fonte
-                fontWeight: "bold", // Deixa o texto mais destacado
-                borderRadius: "8px", // Bordas arredondadas
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Adiciona sombra para profundidade
-                padding: "10px 20px", // Aumenta o espaço interno
-            },
-            offset: {
-                x: 10, // Distância da borda lateral
-                y: 50, // Distância do topo
-            },
-            onClick: function () {
-                console.log("Toast clicado!"); // Callback após clique
-            },
-        }).showToast();
-        
-   
+    if (!isOpen) {
+        showToast("⚠️ Ops, estamos fechados no momento!");
         return;
     }
-    if(cart.length === 0){
-        
-        Toastify({
-            text: "⚠️ Ops, seu carrinho esta vazio!",
-            duration: 4000, // Um pouco mais de tempo para leitura
-            close: true, // Botão de fechamento
-            gravity: "top", // `top` ou `bottom`
-            position: "right", // `left`, `center` ou `right`
-            stopOnFocus: true, // Evita fechar ao passar o mouse
-            style: {
-                background: "linear-gradient(to right, #ff416c, #ff4b2b)", // Gradiente com cores quentes
-                color: "#fff", // Texto em branco para contraste
-                fontSize: "16px", // Tamanho da fonte
-                fontWeight: "bold", // Deixa o texto mais destacado
-                borderRadius: "8px", // Bordas arredondadas
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Adiciona sombra para profundidade
-                padding: "10px 20px", // Aumenta o espaço interno
-            },
-            offset: {
-                x: 0, // Distância da borda lateral
-                y: 50, // Distância do topo
-            },
-            onClick: function () {
-                console.log("Toast clicado!"); // Callback após clique
-            },
-        }).showToast();
+    
+    if (cart.length === 0) {
+        showToast("⚠️ Ops, seu carrinho esta vazio!");
+        return;
+    }
+    if (pedidoTipo === null) {
+        showToast("⚠️ Ops, você precisa escolher um tipo de serviço!");
+        return;
+    }
+    if (pedidoTipo === 'entrega' && !validateAddress()) {
+        showToast("⚠️ Ops, preencha todos os campos!");
         return;
     }
 
-    if (!validateAddress()) {
+    if (pedidoTipo === 'mesa' && mesaNumero === null) {
+        showToast("⚠️ Ops, você precisa selecionar uma mesa!");
         return;
     }
-    itemQuanty = 0;
-   
-    const msg = createWhatsAppMessage();
-    const phone = "31999918730";
- 
-          
-    
-    // Redireciona para o 
     cart.forEach(item => {
         const button = document.querySelector(`[data-name="${item.name}"]`);
         if (button) {
@@ -120,10 +123,16 @@ checkoutBtn.addEventListener("click", function() {
             button.classList.add("bg-gray-900");
         }
     });
+    itemQuanty = 0;
     cartCount.innerHTML = itemQuanty;
+    // Adicione lógica para processar o pedido conforme o tipo
+    const msg = createWhatsAppMessage();
+    const phone = "31999918730";
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
     resetCart();
 });
+
+
 function showClosedToast() {
     // Crie um elemento de toast (notificação) simples
     const toast = document.createElement("div");
@@ -140,34 +149,38 @@ function showClosedToast() {
 }
 
 function validateAddress() {
+    const fieldsToValidate = [
+        { input: addressInputNome, name: "Nome Completo" },
+        { input: addressInputRuaNumero, name: "Rua, Número" },
+        { input: addressInputBairro, name: "Bairro" },
+        { input: addressInputReferencia, name: "Referencia" }
+    ];
+
     let valid = true;
 
-    if (addressInputNome.value.trim() === "") {
-        valid = false;
-    }
-    
-    if (addressInputRuaNumero.value.trim() === "") {
-        valid = false;
-    }
+    // Remove todas as classes de erro antes de validar
+    fieldsToValidate.forEach(field => {
+        field.input.classList.remove("border-red-300");
+    });
 
-    if (addressInputBairro.value.trim() === "") {
-        valid = false;
-    }
+    // Verifica cada campo
+    fieldsToValidate.forEach(field => {
+        if (field.input.value.trim() === "") {
+            valid = false;
+            field.input.classList.add("border-red-300");
+        }
+    });
 
+    // Atualiza o aviso de erro
     if (!valid) {
         addressWarn.classList.remove("hidden");
-        addressInputNome.classList.add("border-red-500");
-        addressInputRuaNumero.classList.add("border-red-500");
-        addressInputBairro.classList.add("border-red-500");
-        return false;
     } else {
         addressWarn.classList.add("hidden");
-        addressInputNome.classList.remove("border-red-500");
-        addressInputRuaNumero.classList.remove("border-red-500");
-        addressInputBairro.classList.remove("border-red-500");
-        return true;
     }
+
+    return valid;
 }
+
 
 function createWhatsAppMessage() {
     const cartItems = cart.map(item => 
@@ -176,19 +189,23 @@ function createWhatsAppMessage() {
 
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
     
+    let additionalInfo = '';
+    if (pedidoTipo === 'mesa') {
+        additionalInfo = `Número da mesa: ${mesaNumero}\n`;
+    } else if (pedidoTipo === 'entrega') {
+        additionalInfo = `Nome do cliente: ${addressInputNome.value},\n
+        Endereço: ${addressInputRuaNumero.value}, ${addressInputBairro.value},\n
+        Referência: ${addressInputReferencia.value}\n`;
+    }
+    
     return encodeURIComponent(
         `Olá, gostaria de fazer um pedido:\n
 ${cartItems}\n
 Total: R$${total}\n
-Nome do cliente: ${addressInputNome.value},\n
-Endereço:  ${addressInputRuaNumero.value}, ${addressInputBairro.value},\n
-Referencia:${addressInputReferencia.value}
-`
-
-
-
+${additionalInfo}`
     );
 }
+
 
 function resetCart() {
 
@@ -243,32 +260,24 @@ menu.addEventListener("click", function (event) {
 
 
 
-
-
 function addToCart(name, price) {
-    // Verifica se o item já existe no carrinho
     const existingItem = cart.find(item => item.name === name);
 
     if (existingItem) {
-        // Incrementa a quantidade do item existente
-        existingItem.quantity += 1;
-        itemQuanty += 1;
+        existingItem.quantity++;
     } else {
-        // Adiciona um novo item ao carrinho
-        cart.push({
-            name,
-            price,
-            quantity: 1,
-        });
-        itemQuanty += 1;
+        cart.push({ name, price, quantity: 1 });    // Função otimizada 
     }
-   
-    cartCount.innerHTML = itemQuanty;
-    
-    // Atualiza o modal após a adição
+
+    itemQuanty++;
+    cartCount.textContent = itemQuanty;
     updateModal();
-    updateCartTotal()
+    updateCartTotal();
 }
+
+
+
+
 function updateCartTotal() {
     // Calcula o total do carrinho
     const currentTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -336,7 +345,7 @@ function removeItemCart(name) {
 
     const item = cart[itemIndex];
     const button = document.querySelector(`[data-name="${name}"]`);
-    itemQuanty -= 1;
+    itemQuanty --;
     // Se a quantidade for maior que 1, diminui a quantidade
     if (item.quantity > 1) {
         item.quantity -= 1;
@@ -373,7 +382,7 @@ function updateButtonState(button, isInCart) {
 function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 18 && hora < 24;
+    return hora >= 9 && hora < 24;
 
 
 
@@ -391,3 +400,35 @@ if (isOpen) {
     spanItem.classList.add("bg-red-500");
     statusText.textContent = "Estamos fechados"; 
 }
+
+
+// Mostrar formulário de mesa e ocultar formulário de entrega
+mesaBtn.addEventListener("click", () => {
+    mesaForm.classList.remove("hidden");
+    entregaForm.classList.add("hidden");
+});
+
+// Mostrar formulário de entrega e ocultar formulário de mesa
+entregaBtn.addEventListener("click", () => {
+    entregaForm.classList.remove("hidden");
+    mesaForm.classList.add("hidden");
+});
+
+// Gerar botões de mesas ao carregar a página
+document.addEventListener("DOMContentLoaded", () => {
+    for (let i = 1; i <= 20; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.className = "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700";
+        button.dataset.mesa = i;
+
+        // Adicionar evento de clique para seleção de mesa
+        button.addEventListener("click", () => {
+            mesaInput.value = i; // Atualizar input oculto
+            selectedMesaText.textContent = i; // Atualizar display
+            selectedMesaDisplay.classList.remove("hidden"); // Mostrar texto
+        });
+
+        mesaButtonsContainer.appendChild(button); // Adicionar botão ao contêiner
+    }
+});
