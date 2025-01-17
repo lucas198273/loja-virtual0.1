@@ -308,12 +308,6 @@ function addToCart(name, price) {
             isCombo: false, 
             isBurguers: isHamburguer || false,  // Define aqui
         });
-        if (isHamburguer) {
-            // Define como hamburguer
-            console.log("true");
-        }else{
-            console.log("false");
-        }
     }
   
 
