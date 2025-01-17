@@ -180,31 +180,56 @@ function validateAddress() {
 
     return valid;
 }
-
-
 function createWhatsAppMessage() {
-    const cartItems = cart.map(item => 
-        `${item.name} - Quantidade: ${item.quantity} - Preço: R$${(item.price * item.quantity).toFixed(2)}`
-    ).join("\n");
+    // Inicializa variáveis para armazenar o texto e os totais
+    let cartItemsText = "";
+    let totalProducts = 0;
+    let totalCombos = 0;
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
-    
-    let additionalInfo = '';
+    // Itera sobre os itens do carrinho para montar a mensagem e calcular os totais
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity; // Valor total do produto
+        totalProducts += itemTotal;
+
+        let itemText = `\n${item.name} - Quantidade: ${item.quantity} - Subtotal: R$${itemTotal.toFixed(2)}`;
+
+        if (item.isCombo) {
+            const comboTotal =  item.comboQuantity * 12.90; // Valor do combo
+            totalCombos += comboTotal;
+           
+
+
+            itemText += ` \nQuantidade de Combos: ${item.comboQuantity} , Total dos combos: R$${comboTotal.toFixed(2)}\n`;
+        }
+
+        cartItemsText += `${itemText}\n`;
+    });
+
+    // Calcula o total geral
+    const totalGeral = totalProducts + totalCombos;
+
+    // Adiciona informações de tipo de pedido, se necessário
+    let additionalInfo = "";
     if (pedidoTipo === 'mesa') {
-        additionalInfo = `Número da mesa: ${mesaNumero}\n`;
+        additionalInfo = `\nNúmero da mesa: ${mesaNumero}`;
     } else if (pedidoTipo === 'entrega') {
-        additionalInfo = `Nome do cliente: ${addressInputNome.value},\n
-        Endereço: ${addressInputRuaNumero.value}, ${addressInputBairro.value},\n
-        Referência: ${addressInputReferencia.value}\n`;
+        additionalInfo = `\nNome do cliente: ${addressInputNome.value}` +
+            `\nEndereço: ${addressInputRuaNumero.value}, ${addressInputBairro.value}` +
+            `\nReferência: ${addressInputReferencia.value}`;
     }
-    
-    return encodeURIComponent(
-        `Olá, gostaria de fazer um pedido:\n
-${cartItems}\n
-Total: R$${total}\n
-${additionalInfo}`
-    );
+
+    // Monta a mensagem final
+    const message = `Olá, gostaria de fazer um pedido:\n\n` +
+        `${cartItemsText}\n` +
+        `Total dos produtos: R$${totalProducts.toFixed(2)}\n` +
+        `Total dos combos: R$${totalCombos.toFixed(2)}\n` +
+        `Total geral: R$${totalGeral.toFixed(2)}\n` +
+        `${additionalInfo}`;
+
+    // Retorna a mensagem codificada para o WhatsApp
+    return encodeURIComponent(message);
 }
+
 
 
 function resetCart() {
@@ -258,16 +283,39 @@ menu.addEventListener("click", function (event) {
     }
 });
 
-
-
 function addToCart(name, price) {
+    const buttonElement = document.querySelector(`[data-name="${name}"]`);
+    const isHamburguer = buttonElement.closest(".card-burguer") !== null; // Agora verifica a classe
+   
     const existingItem = cart.find(item => item.name === name);
 
     if (existingItem) {
         existingItem.quantity++;
+        if (isHamburguer) {
+            existingItem.isBurguers = true; // Define como hamburguer
+            console.log("true");
+        }else{
+            console.log("false");
+        }
+       
     } else {
-        cart.push({ name, price, quantity: 1 });    // Função otimizada 
+        // Adiciona o item ao carrinho com a propriedade isBurguers
+        cart.push({ 
+            name, 
+            price, 
+            quantity: 1, 
+            comboQuantity: 0, 
+            isCombo: false, 
+            isBurguers: isHamburguer || false,  // Define aqui
+        });
+        if (isHamburguer) {
+            // Define como hamburguer
+            console.log("true");
+        }else{
+            console.log("false");
+        }
     }
+  
 
     itemQuanty++;
     cartCount.textContent = itemQuanty;
@@ -278,9 +326,113 @@ function addToCart(name, price) {
 
 
 
+
+
+
+function updateModal() {
+    cartItemsContainer.innerHTML = "";
+    let total = 0;
+
+    cart.forEach(item => {
+        const cartItemElement = document.createElement("div");
+        
+        cartItemElement.classList.add("flex", "justify-between", "mb-4", "flex-col", "p-4", "border", "rounded-lg", "shadow-md");
+        const comboButtonsVisibility = item.isBurguers ? "flex" : "hidden";
+        // Adiciona a mensagem de combo se o item estiver em combo
+        const comboMessage = item.isCombo ? 
+        `<p class="text-red-500 font-semibold">Combo: ${item.comboQuantity} (R$ ${item.price.toFixed(2)})</p>` : '';
+            cartItemElement.innerHTML = `
+  <div class="flex flex-wrap items-center justify-between gap-4 p-4 border-b border-gray-200">
+    <!-- Informações do item -->
+  
+    <div>
+            <p class="text-lg font-semibold">${item.name}</p>
+            <p>Quantidade: ${item.quantity}</p>
+            <p class="text-green-500">R$ ${item.price.toFixed(2)}</p>
+            ${item.isCombo ? `<p class="text-red-500 font-semibold">Combo: ${item.comboQuantity}</p>` : ""}
+    </div>
+
+    <!-- Opções de combo -->
+    <div class="${comboButtonsVisibility} flex-col items-center space-y-2 min-w-[150px]">
+    
+      <button 
+        class="add-combo bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+        data-name="${item.name}">
+        Adicionar Combo
+      </button>
+      <button 
+        class="remove-combo bg-yellow-500 text-white text-sm font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+        data-name="${item.name}">
+        Remover Combo
+      </button>
+    </div>
+
+    <!-- Botão remover do carrinho -->
+    <div class="min-w-[100px]">
+      <button 
+        class="remove-from-cart bg-red-700 text-white text-sm font-semibold py-2 px-4 rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-400 transition"
+        data-name="${item.name}">
+        Remover
+      </button>
+    </div>
+  </div>
+`;
+
+
+        total += item.price * item.quantity; // Calcula o total
+        cartItemsContainer.appendChild(cartItemElement);
+    });
+
+    cartTotal.textContent = total.toLocaleString("pt-br", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
+
+
+
+
+
+
+function updateCombo(itemName, action) {
+    const item = cart.find(i => i.name === itemName);
+    if (!item) return;
+
+    const comboPrice = 12.90; // Valor unitário do combo
+
+    if (action === "add") {
+        // Adicionar um combo
+        if (item.quantity > item.comboQuantity) {
+            item.comboQuantity++; // Aumenta a quantidade de combos
+            item.isCombo = true; // Marca o item como tendo combo
+            showToast(`Combo adicionado para ${item.name}!`);
+        } else {
+            showToast(`Quantidade insuficiente para adicionar combo.`);
+        }
+    } else if (action === "remove") {
+        // Remover um combo
+        if (item.comboQuantity > 0) {
+            item.comboQuantity--; // Reduz a quantidade de combos
+            if (item.comboQuantity === 0) {
+                item.isCombo = false; // Remove o status de combo, se aplicável
+            }
+            showToast(`Combo removido de ${item.name}!`);
+        } else {
+            showToast(`Não há combos para remover.`);
+        }
+    }
+
+    updateModal();
+    updateCartTotal(); // Recalcula o total do carrinho
+}
+
 function updateCartTotal() {
     // Calcula o total do carrinho
-    const currentTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const currentTotal = cart.reduce((sum, item) => {
+        const itemBaseTotal = item.price * item.quantity; // Total base do item
+        const comboTotal = item.comboQuantity * 12.90; // Total dos combos adicionados
+        return sum + itemBaseTotal + comboTotal;
+    }, 0);
     
     // Atualiza o texto do total no carrinho
     cartTotal.textContent = currentTotal.toLocaleString("pt-br", {
@@ -289,50 +441,21 @@ function updateCartTotal() {
     });
 }
 
-function updateModal(){
-    cartItemsContainer.innerHTML = ""
-    let total = 0;
 
-    cart.forEach(item =>{
-        const cartItemElemente = document.createElement("div");
-       
-        cartItemElemente.classList.add("flex","justify-beteween","mb-4","flex-col")
-        cartItemElemente.innerHTML = `
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="font-medium"> ${item.name}</p>
-                <p>Quantidade: ${item.quantity}</p>
-                <p>R$ ${item.price.toFixed(2)}</p>            </div>
-            <div>
-           <button class="remove-from-cart bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out" data-name="${item.name}">
-    Remover
-</button>
+cartItemsContainer.addEventListener("click", function (event) {
+    const button = event.target;
+    const itemName = button.dataset.name;
 
-
-            </div>
-        </div>
-        `
-
-    total += item.price * item.quantity; // Calcula o total
-    
-    cartItemsContainer.appendChild(cartItemElemente)
-
-    });
-    cartTotal.textContent = total.toLocaleString("pt-br",{
-        style:"currency",
-        currency:"BRL"
-    });
-    
-}
-
-
-cartItemsContainer.addEventListener("click",function(event){
-    if(event.target.classList.contains("remove-from-cart")){
-        const name = event.target.getAttribute("data-name")
-        removeItemCart(name)
+    if (event.target.classList.contains("remove-from-cart")) {
+        const name = event.target.getAttribute("data-name");
+        removeItemCart(name);
     }
-})
-
+    if (button.classList.contains("add-combo")) {
+        updateCombo(itemName, "add");
+    } else if (button.classList.contains("remove-combo")) {
+        updateCombo(itemName, "remove");
+    }
+});
 
 function removeItemCart(name) {
     // Encontra o índice do item no carrinho
@@ -345,21 +468,30 @@ function removeItemCart(name) {
 
     const item = cart[itemIndex];
     const button = document.querySelector(`[data-name="${name}"]`);
-    itemQuanty --;
-    // Se a quantidade for maior que 1, diminui a quantidade
+    const comboPrice = 12.90; // Valor unitário do combo
+
+    // Diminui a quantidade de itens no carrinho
     if (item.quantity > 1) {
         item.quantity -= 1;
+
+        // Se houver combos, reduz a quantidade de combos também
+        if (item.comboQuantity > 0) {
+            item.comboQuantity -= 1; // Remove um combo
+            showToast(`Combo removido automaticamente de ${item.name}!`);
+        }
     } else {
-        // Se a quantidade for 1, remove o item do carrinho
+        // Se a quantidade for 1, remove o item completamente
         cart.splice(itemIndex, 1);
         updateButtonState(button, false);
     }
 
-    // Atualiza a quantidade total e o contador do carrinho
-    
+    // Atualiza o contador do carrinho e o modal
+    itemQuanty--; // Atualiza o número total de itens no carrinho
     cartCount.innerHTML = itemQuanty;
     updateModal();
+    updateCartTotal(); // Atualiza o total do carrinho com os ajustes
 }
+
 
 // Atualiza o estado do botão baseado na presença do item no carrinho
 function updateButtonState(button, isInCart) {
