@@ -509,9 +509,6 @@ function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
     return hora >= 19 && hora < 24;
-
-
-
 }
 // segunda a quinta
 // sexta sabado e domingo fecha as 3 
