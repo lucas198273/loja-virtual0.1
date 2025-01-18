@@ -508,7 +508,7 @@ function updateButtonState(button, isInCart) {
 function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 19 && hora < 2;
+    return hora >= 19 && hora < 24;
 
 
 
