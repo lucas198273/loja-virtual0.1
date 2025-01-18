@@ -508,11 +508,15 @@ function updateButtonState(button, isInCart) {
 function checkRestauranteOpen(){
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 9 && hora < 24;
+    return hora >= 19 && hora < 2;
 
 
 
 }
+// segunda a quinta
+// sexta sabado e domingo fecha as 3 
+// terça fechado
+
 
 const spanItem = document.getElementById("date-span");
 const isOpen = checkRestauranteOpen();
