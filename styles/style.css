@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.banner-slide-container {
+    width: 100%; /* Garante que o banner ocupe toda a largura */
+    height: 50vh; /* Ajusta a altura conforme necessário, 50% da altura da tela */
+    position: relative;
+}
+
+.banner img {
+    width: 100%; /* Imagem vai ocupar toda a largura */
+    height: 100%; /* Imagem vai ocupar toda a altura definida */
+    object-fit: cover; /* Garante que a imagem cubra a área sem distorção */
+}
+
 /* Esconder a barra de rolagem */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
