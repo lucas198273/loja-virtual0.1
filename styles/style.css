@@ -1,44 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@keyframes colorOscillation {
-    0% { background-color: #ffffff; }  
-    25% { background-color: #f7f9fc; }  
-    50% { background-color: #f0f4f8; }  
-    75% { background-color: #ffffff; } 
-    100% { background-color: #f7f9fc; } 
 
+/* Esconder a barra de rolagem */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
 }
 
-.animated-background {
-    animation: colorOscillation 5s infinite;
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
-body{
-    background-color: rgb(255, 255, 255);
-}
-.map-responsive{
-
-    overflow:hidden;
-
-    padding-bottom:56.25%;
-
-    position:relative;
-
-    height:0;
-
+/* Estilos para garantir que apenas um banner esteja visível */
+.banner {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Transição suave entre os banners */
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
-.map-responsive iframe{
+/* Exibir apenas o banner ativo */
+.banner.active {
+    opacity: 1;
+}
 
-    left:0;
-
-    top:0;
-
-    height:100%;
-
-    width:100%;
-
-    position:absolute;
-
+/* Ajustando o layout do container para não mostrar todos os banners ao mesmo tempo */
+.banner-slide-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }

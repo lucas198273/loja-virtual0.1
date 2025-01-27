@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <title>Exibição de Produtos</title>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="flex flex-col items-center sm:flex-row sm:justify-between p-4 bg-white shadow-md">
+        <div class="flex items-center space-x-3 mb-4 sm:mb-0">
+            <div class="w-12 h-12 rounded-full overflow-hidden">
+                <img src="./assets/Modafeminina..png" alt="Logotipo" class="w-full h-full object-cover">
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800">
+                <span class="text-emerald-800">Moda</span>Feminina
+            </h1>
+        </div>
+        <nav class="flex flex-wrap justify-center space-x-6">
+            <a href="/index.html" class="text-gray-600 hover:text-pink-500">Início</a>
+            <a href="/allproducts.html" class="text-gray-600 hover:text-pink-500">Produtos</a>
+           
+        </nav>
+    </header>
+    
+    <main class="container mx-auto p-6">
+        <h2 class="text-2xl font-semibold mb-6">Todos os Nossos Produtos</h2>
+        
+        <!-- Botões de filtro -->
+        <div class="flex space-x-4 mb-6">
+            <button id="filterAll" class="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600">Todos</button>
+            <button id="filterOutono" class="py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600">Outono</button>
+            <button id="filterVerao" class="py-2 px-4 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">Verão</button>
+            <button id="filterCasual" class="py-2 px-4 bg-pink-500 text-white rounded-md hover:bg-pink-600">Casual</button>
+        </div>
+        
+        <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Os cards de produtos serão injetados aqui via JavaScript -->
+        </div>
+    </main>
+    
+    
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <p>&copy; 2023 Sua Empresa. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+            <h2 id="modalTitle" class="text-2xl font-bold text-gray-800 mb-4">Título do Produto</h2>
+            <img id="modalImage" src="" alt="Imagem do Produto" class="w-full h-48 object-cover mb-4" />
+            <p id="modalDescription" class="text-gray-600 mb-4">Descrição do produto</p>
+            <p id="modalPrice" class="text-xl font-semibold text-emerald-800">Preço</p>
+            <button id="closeModal" class="mt-4 py-2 px-4 bg-pink-500 text-white font-semibold rounded-md hover:bg-pink-600">
+                Fechar
+            </button>
+        </div>
+    </div>
+    <script type="module" src="./allproducts.js"></script>
+
+</body>
+</html>
