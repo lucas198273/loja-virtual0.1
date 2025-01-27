@@ -1,10 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // Aqui você pode adicionar os caminhos dos arquivos que deseja importar
     const productFiles = [
-        // "./produtos/colection1.js",
-        // "./produtos/colection2.js",
-        // "./produtos/colection3.js",
-        "./produtos/products.js",  // Caminho correto para o arquivo collection1.js
+        "./produtos/products.js", // Caminho correto para o arquivo de produtos
     ];
 
     try {
@@ -12,10 +8,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         initBannerRotation();
         renderProductCards(products);
         initModalCloseEvent();
+
+        // Agora a variável cartModal é definida fora da função de clique
+        const cartModal = document.getElementById("cart-modal");
+        const cartBtn = document.getElementById("cart-btn");
+
+        cartBtn.addEventListener("click", function() {
+            cartModal.style.display = "flex"; // Para mostrar o modal
+        });
     } catch (error) {
         console.error('Erro ao importar produtos:', error);
     }
 });
+
+let cart = [];
+// Fechar o modal do carrinho
+
 
 // Função para importar vários arquivos de produtos
 async function importProducts(files) {
@@ -41,9 +49,6 @@ function initBannerRotation() {
 
 // Função para renderizar os cards de produtos
 function renderProductCards(products) {
-    console.log(products);
-    
-    // Limpa o conteúdo das coleções
     const collection1Container = document.querySelector("#collection1");
     const collection2Container = document.querySelector("#collection2");
     const collection3Container = document.querySelector("#collection3");
@@ -53,11 +58,9 @@ function renderProductCards(products) {
     collection2Container.innerHTML = "";
     collection3Container.innerHTML = "";
 
-    // Adiciona produtos em coleções específicas (baseado no nome da coleção)
     products.forEach((product) => {
         const card = createProductCard(product);
 
-        // Condiciona produtos para as coleções
         if (product.collection === "Outono") {
             collection1Container.appendChild(card);
         } else if (product.collection === "Verão") {
@@ -77,13 +80,28 @@ function createProductCard(product) {
         <div class="p-4">
             <h3 class="product-title text-lg font-semibold text-gray-800">${product.title}</h3>
             <p class="product-description text-sm text-gray-600">${product.description}</p>
-            <p class="product-price text-xl font-semibold text-emerald-800 mt-2">${product.price}</p>
-            <button class="w-full mt-4 py-2 bg-pink-500 text-white font-semibold rounded-md hover:bg-pink-600">Ver detalhes</button>
+            <p class="product-price text-xl font-semibold text-emerald-800 mt-2">R$: ${product.price.toFixed(2)}</p>
+            <div class="flex justify-between gap-2 mt-4">
+                <button class="flex-1 py-2 bg-pink-500 text-white font-semibold rounded-md hover:bg-pink-600">
+                    Ver detalhes
+                </button>
+                <button class="add-to-cart-btn flex-1 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600" data-product='${JSON.stringify(product)}'>
+                    Adicionar ao carrinho
+                </button>
+            </div>
         </div>
     `;
+
+    card.querySelector(".add-to-cart-btn").addEventListener("click", (event) => {
+        alert("click")
+        event.stopPropagation();
+        addToCart(product);
+    });
+
     card.addEventListener("click", () => {
         openModal(product);
     });
+
     return card;
 }
 
@@ -93,7 +111,7 @@ function openModal(product) {
     document.getElementById("modalTitle").textContent = product.title;
     document.getElementById("modalImage").src = product.image;
     document.getElementById("modalDescription").textContent = product.description;
-    document.getElementById("modalPrice").textContent = product.price;
+    document.getElementById("modalPrice").textContent = `R$: ${product.price.toFixed(2)}`;
     modal.classList.remove("hidden");
 }
 
@@ -103,4 +121,47 @@ function initModalCloseEvent() {
     closeModal.addEventListener("click", () => {
         document.getElementById("productModal").classList.add("hidden");
     });
+}
+
+// Função para adicionar produtos ao carrinho
+
+
+function addToCart(product) {
+    cart.push(product);
+    updateCart();
+}
+
+function updateCart() {
+    const cartCount = document.getElementById("cart-count");
+    const cartItemsContainer = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+
+    // Atualiza a contagem de itens no carrinho
+    cartCount.textContent = cart.length;
+
+    // Atualiza os itens no carrinho
+    cartItemsContainer.innerHTML = "";
+    cart.forEach(item => {
+        const cartItem = document.createElement("div");
+        cartItem.classList.add("cart-item");
+        cartItem.textContent = item.title;
+        cartItemsContainer.appendChild(cartItem);
+    });
+
+    // Atualiza o total do carrinho
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    cartTotal.textContent = `R$: ${total.toFixed(2)}`;
+}
+
+
+// Função para exibir notificações
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast bg-gray-800 text-white px-4 py-2 rounded-md fixed bottom-4 right-4 shadow-lg";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }

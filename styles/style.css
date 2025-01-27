@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* #cart-modal.hidden {
+    display: none;
+} */
 
 .banner-slide-container {
     width: 100%; /* Garante que o banner ocupe toda a largura */

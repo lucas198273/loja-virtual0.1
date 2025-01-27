@@ -21,7 +21,7 @@ const displayProducts = (filter = null) => {
             <img src="${product.image}" alt="${product.title}" class="w-full h-48 object-cover mb-4">
             <h3 class="font-semibold text-lg text-gray-800">${product.title}</h3>
             <p class="text-gray-600">${product.description}</p>
-            <p class="text-xl font-semibold text-emerald-800">${product.price}</p>
+            <p class="text-xl font-semibold text-emerald-800">R$: ${product.price.toFixed(2)}</p>
             <button class="w-full mt-4 py-2 bg-pink-500 text-white font-semibold rounded-md hover:bg-pink-600" data-product='${JSON.stringify(product)}'>Ver detalhes</button>
         `;
 
