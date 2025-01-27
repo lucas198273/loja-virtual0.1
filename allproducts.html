@@ -40,9 +40,15 @@
         </div>
     </main>
     
-    <footer class="bg-gray-800 text-white p-4 text-center">
-        <p>&copy; 2023 Sua Empresa. Todos os direitos reservados.</p>
-    </footer>
+    <footer class="w-full  bg-blue-900 py-3 fixed bottom-0 z-40 flex items-center justify-center ">
+        <button
+        class="flex items-center gap-2 text-white font-bold"
+        id="cart-btn">
+            (<span id="cart-count">0</span>)
+            Ver meu Carrinho
+            <i class="fa fa-cart-plus text-lg text-white"></i>
+        </button>
+     </footer>
 
     <!-- Modal -->
     <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">

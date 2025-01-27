@@ -1,18 +1,31 @@
 const products = [
+   
     {
         title: "Produto 1 da coleção 2",
         description: "Descrição do Produto 1",
         price: "R$ 100,00",
         image: "/assets/imgoutono.jpg",
         collection: "Outono" // ou "Verão", "Casual"
-    },          
+    },
+
+    {
+        title: "lusa Feminina",
+        description: "Descrição do Produto 1",
+        price: "R$ 250,00",
+        image: "/assets/imgoutono.jpg",
+        collection: "Verão" // Outono ou "Verão", "Casual"
+    },
+    
+    
+
     {
         title: "Produto 1 da coleção 2",
         description: "Descrição do Produto 1",
         price: "R$ 100,00",
         image: "/assets/imgoutono.jpg",
         collection: "Outono" // ou "Verão", "Casual"
-    },          
+    },    
+
     {
         title: "Produto 1 da coleção 2",
         description: "Descrição do Produto 1",
