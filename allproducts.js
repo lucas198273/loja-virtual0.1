@@ -22,11 +22,19 @@ const displayProducts = (filter = null) => {
             <h3 class="font-semibold text-lg text-gray-800">${product.title}</h3>
             <p class="text-gray-600">${product.description}</p>
             <p class="text-xl font-semibold text-emerald-800">${product.price}</p>
+            <button class="w-full mt-4 py-2 bg-pink-500 text-white font-semibold rounded-md hover:bg-pink-600" data-product='${JSON.stringify(product)}'>Ver detalhes</button>
         `;
 
-        productCard.addEventListener('click', () => openModal(product));
-
         productsGrid.appendChild(productCard);
+    });
+
+    // Adiciona evento de clique nos botões de detalhes
+    const detailButtons = document.querySelectorAll('[data-product]');
+    detailButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const product = JSON.parse(button.getAttribute('data-product'));
+            openModal(product);
+        });
     });
 };
 
@@ -40,13 +48,10 @@ const openModal = (product) => {
     modal.classList.remove('hidden');
 };
 
-// Fechar o modal
-const closeModal = () => {
-    const modal = document.getElementById('productModal');
-    modal.classList.add('hidden');
-};
-
-document.getElementById('closeModal').addEventListener('click', closeModal);
+// Evento para fechar o modal
+document.getElementById('closeModal').addEventListener('click', () => {
+    document.getElementById('productModal').classList.add('hidden');
+});
 
 // Adiciona os event listeners aos botões de filtro
 filterAll.addEventListener('click', () => displayProducts());
